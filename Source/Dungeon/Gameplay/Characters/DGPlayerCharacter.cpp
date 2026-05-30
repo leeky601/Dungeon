@@ -58,7 +58,7 @@ void ADGPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		&ADGPlayerCharacter::OnAbilityInputTagReleased);
 }
 
-void ADGPlayerCharacter::OnAbilityInputTagPressed(FGameplayTag InputTag)
+void ADGPlayerCharacter::OnAbilityInputTagPressed(const FGameplayTag InputTag)
 {
 	if (AbilitySystemComponent)
 	{
@@ -66,7 +66,7 @@ void ADGPlayerCharacter::OnAbilityInputTagPressed(FGameplayTag InputTag)
 	}
 }
 
-void ADGPlayerCharacter::OnAbilityInputTagReleased(FGameplayTag InputTag)
+void ADGPlayerCharacter::OnAbilityInputTagReleased(const FGameplayTag InputTag)
 {
 	if (AbilitySystemComponent)
 	{

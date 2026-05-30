@@ -44,15 +44,16 @@ namespace DGGameplayTags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Interaction_Triggered)
 
 	// ─── Damage ──────────────────────────────────────────────────────────────
-	// GE의 SetByCaller 분류 또는 DamageExecution 내 피해 유형 분기에 사용.
-	// GameplayCue 선택, 방어/저항 계산 분기의 기준 태그.
+	// 피해 유형 분류 태그. SetByCaller 키가 아님.
+	// 용도: DamageExecution 분기, GameplayCue 선택, 방어/저항 계산.
+	// GE의 GrantedTags 또는 Execution 로직에서 참조한다.
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Physical)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Magic)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_True)   // 방어 무시
 
 	// ─── SetByCaller ─────────────────────────────────────────────────────────
-	// GE Spec에 런타임 수치를 주입할 때 사용하는 키 태그.
-	// GameplayEffect의 Magnitude를 SetByCaller로 설정할 때 이 태그를 지정한다.
+	// GE Spec에 런타임 수치를 주입하는 값 채널 태그. 피해 유형과 무관.
+	// Damage.* 태그와 혼용 금지 — 타입은 Damage.*, 수치는 SetByCaller.*로 분리한다.
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Damage_Base)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Damage_Bonus)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_HealAmount)

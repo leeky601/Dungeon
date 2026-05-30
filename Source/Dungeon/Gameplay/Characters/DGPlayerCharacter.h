@@ -32,8 +32,8 @@ protected:
 
 private:
 	void InitFromPlayerState();
-	void OnAbilityInputTagPressed(FGameplayTag InputTag);
-	void OnAbilityInputTagReleased(FGameplayTag InputTag);
+	void OnAbilityInputTagPressed(const FGameplayTag InputTag);
+	void OnAbilityInputTagReleased(const FGameplayTag InputTag);
 
 	bool bDefaultAbilitiesGranted = false;
 };

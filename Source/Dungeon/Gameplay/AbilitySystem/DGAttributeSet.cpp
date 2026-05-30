@@ -2,6 +2,7 @@
 #include "Core/Tags/DGGameplayTags.h"
 #include "Net/UnrealNetwork.h"
 #include "GameplayEffectExtension.h"
+#include "Dungeon.h"
 
 UDGAttributeSet::UDGAttributeSet()
 {
@@ -52,7 +53,13 @@ void UDGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 
 	if (Damage <= 0.f) return;
 
-	SetHealth(FMath::Clamp(GetHealth() - Damage, 0.f, GetMaxHealth()));
+	const float OldHealth = GetHealth();
+	SetHealth(FMath::Clamp(OldHealth - Damage, 0.f, GetMaxHealth()));
+
+	UE_LOG(LogDungeon, Log,
+		TEXT("[AttributeSet] IncomingDamage=%.1f | Health: %.1f -> %.1f | Actor=%s"),
+		Damage, OldHealth, GetHealth(),
+		GetOwningActor() ? *GetOwningActor()->GetName() : TEXT("Unknown"));
 
 	if (GetHealth() <= 0.f)
 	{
