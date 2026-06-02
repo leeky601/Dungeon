@@ -16,7 +16,7 @@ struct FDGAbilitySet_GameplayAbility
 	TSubclassOf<UGameplayAbility> AbilityClass;
 
 	// ASC DynamicAbilityTags에 등록 — 입력 활성화 키로 사용된다.
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, meta = (Categories = "Input"))
 	FGameplayTag InputTag;
 
 	UPROPERTY(EditDefaultsOnly)
