@@ -51,7 +51,7 @@ void UDGGameplayAbility_LightAttack::ActivateAbility(
 	MontageTask->OnCancelled.AddDynamic(this, &UDGGameplayAbility_LightAttack::OnMontageCancelled);
 	MontageTask->ReadyForActivation();
 
-	// AN_SendGameplayEvent로부터 히트 타이밍 이벤트 수신 대기
+	// AnimNotify_GameplayEvent로부터 히트 타이밍 이벤트 수신 대기
 	UAbilityTask_WaitGameplayEvent* EventTask =
 		UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, HitEventTag, nullptr, false, true);
 	EventTask->EventReceived.AddDynamic(this, &UDGGameplayAbility_LightAttack::OnHitEventReceived);

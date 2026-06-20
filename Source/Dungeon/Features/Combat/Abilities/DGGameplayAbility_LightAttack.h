@@ -5,7 +5,7 @@
 #include "DGGameplayAbility_LightAttack.generated.h"
 
 // 단일 근접 공격 어빌리티.
-// 흐름: 몽타주 재생 → AN_SendGameplayEvent 발동 → 서버 SphereTrace → GE_LightAttackDamage 적용
+// 흐름: 몽타주 재생 → AnimNotify_GameplayEvent 발동 → 서버 SphereTrace → GE_LightAttackDamage 적용
 UCLASS()
 class DUNGEON_API UDGGameplayAbility_LightAttack : public UGameplayAbility
 {
@@ -46,7 +46,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category="Attack|Trace", meta=(ClampMin="1.0", ClampMax="500.0"))
 	float AttackRadius = 60.f;
 
-	// AN_SendGameplayEvent가 전송하는 이벤트 태그와 일치해야 함
+	// 몽타주에 배치한 AnimNotify_GameplayEvent의 태그와 일치해야 함
 	UPROPERTY(EditDefaultsOnly, Category="Attack|Event")
 	FGameplayTag HitEventTag;
 };
