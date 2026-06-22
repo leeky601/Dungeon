@@ -4,7 +4,14 @@
 
 namespace DGGameplayTags
 {
-	// ─── Input ───────────────────────────────────────────────────────────────
+	// ─── Input (Native) ──────────────────────────────────────────────────────
+	// GAS를 거치지 않고 Character에서 직접 처리하는 Native 입력 태그.
+	// DGInputConfig::NativeInputActions에서 InputAction을 찾는 키로 사용한다.
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Native_Move)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Native_Look)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Native_Jump)
+
+	// ─── Input (Ability) ─────────────────────────────────────────────────────
 	// IA(Input Action)와 1:1 대응. ASC TryActivateAbilitiesByTag()의 인자로 사용.
 	// AbilitySet DataAsset에서 InputTag → AbilityClass 매핑을 보관한다.
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Attack_Light)

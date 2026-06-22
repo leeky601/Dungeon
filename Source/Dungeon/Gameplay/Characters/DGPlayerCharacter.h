@@ -2,11 +2,13 @@
 
 #include "Gameplay/Characters/DGCharacterBase.h"
 #include "GameplayTagContainer.h"
+#include "InputActionValue.h"
 #include "DGPlayerCharacter.generated.h"
 
 class UDGAbilitySet;
-class UDGInputConfig;
-class UInputMappingContext;
+class UDGInputData;
+class USpringArmComponent;
+class UCameraComponent;
 
 UCLASS()
 class DUNGEON_API ADGPlayerCharacter : public ADGCharacterBase
@@ -21,19 +23,28 @@ protected:
 	virtual void OnRep_PlayerState() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	TObjectPtr<USpringArmComponent> SpringArmComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	TObjectPtr<UCameraComponent> CameraComponent;
+
 	UPROPERTY(EditDefaultsOnly, Category = "GAS")
 	TObjectPtr<UDGAbilitySet> DefaultAbilitySet;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	TObjectPtr<UDGInputConfig> InputConfig;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	TObjectPtr<UInputMappingContext> DefaultMappingContext;
+	TObjectPtr<UDGInputData> InputData;
 
 private:
 	void InitFromPlayerState();
+	 
 	void OnAbilityInputTagPressed(const FGameplayTag InputTag);
 	void OnAbilityInputTagReleased(const FGameplayTag InputTag);
+
+	void Input_Move(const FInputActionValue& Value);
+	void Input_Look(const FInputActionValue& Value);
+	void Input_Jump();
+	void Input_StopJumping();
 
 	bool bDefaultAbilitiesGranted = false;
 };

@@ -4,10 +4,25 @@
 #include "Gameplay/AbilitySystem/DGAbilitySet.h"
 #include "Gameplay/Input/DGInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Core/Tags/DGGameplayTags.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Dungeon.h"
 
 ADGPlayerCharacter::ADGPlayerCharacter()
 {
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArmComponent->SetupAttachment(GetRootComponent());
+	SpringArmComponent->TargetArmLength = 400.f;
+	SpringArmComponent->bUsePawnControlRotation = true;
+
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	CameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
+	CameraComponent->bUsePawnControlRotation = false;
+
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
 void ADGPlayerCharacter::PossessedBy(AController* NewController)
@@ -26,18 +41,6 @@ void ADGPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	if (APlayerController* PC = GetController<APlayerController>())
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
-			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
-		{
-			if (DefaultMappingContext)
-			{
-				Subsystem->AddMappingContext(DefaultMappingContext, 0);
-			}
-		}
-	}
-
 	UDGInputComponent* DGInput = Cast<UDGInputComponent>(PlayerInputComponent);
 	if (!DGInput)
 	{
@@ -47,15 +50,32 @@ void ADGPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		return;
 	}
 
-	if (!InputConfig)
+	if (!InputData)
 	{
-		UE_LOG(LogDungeon, Warning, TEXT("[Input] InputConfig가 설정되지 않았습니다. Actor=%s"), *GetName());
+		UE_LOG(LogDungeon, Warning, TEXT("[Input] InputData가 설정되지 않았습니다. Actor=%s"), *GetName());
 		return;
 	}
 
-	DGInput->BindAbilityActions(InputConfig, this,
+	if (APlayerController* PC = GetController<APlayerController>())
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
+			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
+		{
+			if (InputData->DefaultMappingContext)
+			{
+				Subsystem->AddMappingContext(InputData->DefaultMappingContext, 0);
+			}
+		}
+	}
+
+	DGInput->BindAbilityActions(InputData, this,
 		&ADGPlayerCharacter::OnAbilityInputTagPressed,
 		&ADGPlayerCharacter::OnAbilityInputTagReleased);
+
+	DGInput->BindNativeAction(InputData, DGGameplayTags::Input_Native_Move, ETriggerEvent::Triggered, this, &ADGPlayerCharacter::Input_Move);
+	DGInput->BindNativeAction(InputData, DGGameplayTags::Input_Native_Look, ETriggerEvent::Triggered, this, &ADGPlayerCharacter::Input_Look);
+	DGInput->BindNativeAction(InputData, DGGameplayTags::Input_Native_Jump, ETriggerEvent::Started,   this, &ADGPlayerCharacter::Input_Jump);
+	DGInput->BindNativeAction(InputData, DGGameplayTags::Input_Native_Jump, ETriggerEvent::Completed, this, &ADGPlayerCharacter::Input_StopJumping);
 }
 
 void ADGPlayerCharacter::OnAbilityInputTagPressed(const FGameplayTag InputTag)
@@ -72,6 +92,36 @@ void ADGPlayerCharacter::OnAbilityInputTagReleased(const FGameplayTag InputTag)
 	{
 		AbilitySystemComponent->AbilityInputTagReleased(InputTag);
 	}
+}
+
+void ADGPlayerCharacter::Input_Move(const FInputActionValue& Value)
+{
+	const FVector2D MoveInput = Value.Get<FVector2D>();
+	if (!Controller) return;
+
+	const FRotator YawRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
+	const FVector ForwardDir = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const FVector RightDir   = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+	AddMovementInput(ForwardDir, MoveInput.Y);
+	AddMovementInput(RightDir,   MoveInput.X);
+}
+
+void ADGPlayerCharacter::Input_Look(const FInputActionValue& Value)
+{
+	const FVector2D LookInput = Value.Get<FVector2D>();
+	AddControllerYawInput(LookInput.X);
+	AddControllerPitchInput(LookInput.Y);
+}
+
+void ADGPlayerCharacter::Input_Jump()
+{
+	Jump();
+}
+
+void ADGPlayerCharacter::Input_StopJumping()
+{
+	StopJumping();
 }
 
 void ADGPlayerCharacter::InitFromPlayerState()

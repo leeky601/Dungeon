@@ -2,7 +2,12 @@
 
 namespace DGGameplayTags
 {
-	// ─── Input ───────────────────────────────────────────────────────────────
+	// ─── Input (Native) ──────────────────────────────────────────────────────
+	UE_DEFINE_GAMEPLAY_TAG(Input_Native_Move, "Input.Native.Move")
+	UE_DEFINE_GAMEPLAY_TAG(Input_Native_Look, "Input.Native.Look")
+	UE_DEFINE_GAMEPLAY_TAG(Input_Native_Jump, "Input.Native.Jump")
+
+	// ─── Input (Ability) ─────────────────────────────────────────────────────
 	UE_DEFINE_GAMEPLAY_TAG(Input_Attack_Light,  "Input.Attack.Light")
 	UE_DEFINE_GAMEPLAY_TAG(Input_Attack_Heavy,  "Input.Attack.Heavy")
 	UE_DEFINE_GAMEPLAY_TAG(Input_Dodge,         "Input.Dodge")
