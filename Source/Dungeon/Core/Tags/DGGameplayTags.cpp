@@ -47,4 +47,11 @@ namespace DGGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(SetByCaller_Damage_Base,  "SetByCaller.Damage.Base")
 	UE_DEFINE_GAMEPLAY_TAG(SetByCaller_Damage_Bonus, "SetByCaller.Damage.Bonus")
 	UE_DEFINE_GAMEPLAY_TAG(SetByCaller_HealAmount,   "SetByCaller.HealAmount")
+
+	// ─── Stat ────────────────────────────────────────────────────────────────
+	UE_DEFINE_GAMEPLAY_TAG(Stat_Attack,       "Stat.Attack")
+	UE_DEFINE_GAMEPLAY_TAG(Stat_Defense,      "Stat.Defense")
+	UE_DEFINE_GAMEPLAY_TAG(Stat_Strength,     "Stat.Strength")
+	UE_DEFINE_GAMEPLAY_TAG(Stat_Dexterity,    "Stat.Dexterity")
+	UE_DEFINE_GAMEPLAY_TAG(Stat_CriticalRate, "Stat.CriticalRate")
 }

@@ -6,6 +6,7 @@
 
 class UDGAbilitySystemComponent;
 class UDGAttributeSet;
+class UDGSessionProgressComponent;
 
 UCLASS()
 class DUNGEON_API ADGPlayerState : public APlayerState, public IAbilitySystemInterface
@@ -19,6 +20,7 @@ public:
 
 	UDGAbilitySystemComponent* GetDGAbilitySystemComponent() const { return AbilitySystemComponent; }
 	const UDGAttributeSet* GetAttributeSet() const { return AttributeSet; }
+	UDGSessionProgressComponent* GetSessionProgressComponent() const { return SessionProgressComponent; }
 
 private:
 	UPROPERTY(VisibleAnywhere, Category="GAS")
@@ -26,4 +28,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UDGAttributeSet> AttributeSet;
+
+	UPROPERTY(VisibleAnywhere, Category="Session")
+	TObjectPtr<UDGSessionProgressComponent> SessionProgressComponent;
 };

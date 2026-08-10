@@ -1,6 +1,7 @@
 #include "Gameplay/Player/DGPlayerState.h"
 #include "Gameplay/AbilitySystem/DGAbilitySystemComponent.h"
 #include "Gameplay/AbilitySystem/DGAttributeSet.h"
+#include "Features/Session/DGSessionProgressComponent.h"
 
 ADGPlayerState::ADGPlayerState()
 {
@@ -8,6 +9,8 @@ ADGPlayerState::ADGPlayerState()
 	AbilitySystemComponent->SetIsReplicated(true);
 
 	AttributeSet = CreateDefaultSubobject<UDGAttributeSet>(TEXT("AttributeSet"));
+
+	SessionProgressComponent = CreateDefaultSubobject<UDGSessionProgressComponent>(TEXT("SessionProgressComponent"));
 
 	// GAS Attribute 변경이 빠르게 복제되도록 업데이트 빈도 높임
 	SetNetUpdateFrequency(100.f);

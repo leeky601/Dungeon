@@ -65,6 +65,15 @@ namespace DGGameplayTags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Damage_Bonus)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_HealAmount)
 
+	// ─── Stat ────────────────────────────────────────────────────────────────
+	// 장비 스탯 보너스 값 채널 태그. FDGStatBonus::Bonuses의 키로 사용.
+	// 신규 스탯 추가 시 여기에 태그만 추가하면 되고 FDGStatBonus는 수정하지 않는다.
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Stat_Attack)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Stat_Defense)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Stat_Strength)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Stat_Dexterity)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Stat_CriticalRate)
+
 	// ─── GameplayCue ─────────────────────────────────────────────────────────
 	// GAS 규칙상 "GameplayCue."로 시작해야 한다.
 	// Cosmetic 전용(사운드, 파티클). Dedicated Server에서 실행되지 않는다.
