@@ -1,5 +1,6 @@
 #include "Features/Session/DGDungeonSessionComponent.h"
 #include "Features/Session/DGSessionProgressComponent.h"
+#include "Features/Inventory/DGSessionInventoryComponent.h"
 #include "Gameplay/Player/DGPlayerState.h"
 #include "GameFramework/GameStateBase.h"
 #include "Net/UnrealNetwork.h"
@@ -32,6 +33,12 @@ void UDGDungeonSessionComponent::StartDungeonSession()
 	ForEachPlayerSessionProgress([](UDGSessionProgressComponent& ProgressComponent)
 	{
 		ProgressComponent.InitializeSessionProgress();
+	});
+
+	// Hub -> Dungeon Loadout 전달은 아직 연결되지 않았다 — 빈 Loadout으로 세션 인벤토리만 초기화한다.
+	ForEachPlayerSessionInventory([](UDGSessionInventoryComponent& InventoryComponent)
+	{
+		InventoryComponent.InitializeSessionInventory(TArray<FDGSessionLoadoutEntry>());
 	});
 }
 
@@ -86,6 +93,11 @@ void UDGDungeonSessionComponent::EndDungeonSession()
 	{
 		ProgressComponent.ResetSessionProgress();
 	});
+
+	ForEachPlayerSessionInventory([](UDGSessionInventoryComponent& InventoryComponent)
+	{
+		InventoryComponent.ResetSessionInventory();
+	});
 }
 
 void UDGDungeonSessionComponent::ForEachPlayerSessionProgress(TFunctionRef<void(UDGSessionProgressComponent&)> Func)
@@ -108,6 +120,30 @@ void UDGDungeonSessionComponent::ForEachPlayerSessionProgress(TFunctionRef<void(
 		if (UDGSessionProgressComponent* ProgressComponent = DGPlayerState->GetSessionProgressComponent())
 		{
 			Func(*ProgressComponent);
+		}
+	}
+}
+
+void UDGDungeonSessionComponent::ForEachPlayerSessionInventory(TFunctionRef<void(UDGSessionInventoryComponent&)> Func)
+{
+	const AGameStateBase* GameState = Cast<AGameStateBase>(GetOwner());
+	if (!GameState)
+	{
+		UE_LOG(LogDungeon, Warning, TEXT("[Session] ForEachPlayerSessionInventory: owner %s is not a GameStateBase"), *GetNameSafe(GetOwner()));
+		return;
+	}
+
+	for (APlayerState* PlayerState : GameState->PlayerArray)
+	{
+		ADGPlayerState* DGPlayerState = Cast<ADGPlayerState>(PlayerState);
+		if (!DGPlayerState)
+		{
+			continue;
+		}
+
+		if (UDGSessionInventoryComponent* InventoryComponent = DGPlayerState->GetSessionInventoryComponent())
+		{
+			Func(*InventoryComponent);
 		}
 	}
 }

@@ -6,6 +6,7 @@
 #include "DGDungeonSessionComponent.generated.h"
 
 class UDGSessionProgressComponent;
+class UDGSessionInventoryComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDGOnDungeonSessionStateChanged, EDGDungeonSessionState, NewState, EDGDungeonSessionState, OldState);
 
@@ -60,6 +61,9 @@ public:
 private:
 	// 소유 GameState의 PlayerArray를 순회하며 각 ADGPlayerState의 SessionProgressComponent에 Func를 적용한다.
 	void ForEachPlayerSessionProgress(TFunctionRef<void(UDGSessionProgressComponent&)> Func);
+
+	// 소유 GameState의 PlayerArray를 순회하며 각 ADGPlayerState의 SessionInventoryComponent에 Func를 적용한다.
+	void ForEachPlayerSessionInventory(TFunctionRef<void(UDGSessionInventoryComponent&)> Func);
 
 	UFUNCTION() void OnRep_SessionState(EDGDungeonSessionState OldState);
 
